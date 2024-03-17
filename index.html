@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="NFA Simulator">
+    <title>Automaton Simulator</title>
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/main.css">
+  </head>
+  <body>
+    <!-- Main container -->
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <!-- Diagram/canvas for the visualisation of the automaton -->
+          <div id="diagram">
+            <div id="control1" class="control" style="left: 50px; top: 50px">s0</div>
+            <div id="control2" class="control" style="left: 300px; top: 200px">s1</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Context menu for right-clicking on automaton states -->
+    <div id="state-context-menu" class="context-menu">
+      <ul>
+        <li class="delete-state"><a href="#">Delete State</a></li>
+        <li class="rename-state"><a href="#">Rename State</a></li>
+        <li class="toggle-accepting-state"><a href="#">Toggle Accepting State</a></li>
+        <li class="make-starting-state"><a href="#">Make Starting State</a></li>
+      </ul>
+    </div>
+    
+    <!-- Context menu for right-clicking on automaton transitions -->
+    <div id="transition-context-menu" class="context-menu">
+      <ul>
+        <li class="delete-transition"><a href="#">Delete Transition</a></li>
+        <li class="edit-transition"><a href="#">Edit Transition</a></li>
+      </ul>
+    </div>
+
+    <!-- Context menu for right-clicking on an empty part of the diagram -->
+    <div id="body-context-menu" class="context-menu">
+      <ul>
+        <li class="create-control"><a href="#">Create State</a></li>
+      </ul>
+    </div>
+
+    <!-- Script imports -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jsplumb.min.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

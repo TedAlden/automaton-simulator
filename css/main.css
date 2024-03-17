@@ -1,0 +1,106 @@
+html {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+
+}
+
+#diagram {
+  margin: 12px 0;
+  border: 2px solid lightgrey;
+  height: calc(100vh - 24px);
+  position: relative;
+}
+
+/* Controls (state nodes) */
+
+.control {    
+  border-radius: 100%;
+  border: 2px solid black;
+  width: 64px;
+  height: 64px;
+  text-align: center;
+  line-height: 64px;
+  cursor: move;
+  /* height: fit-content;
+  height: -moz-max-content; */
+  background-color: white;
+  /* outline-style: double; */
+  position: absolute;
+}
+
+.control.accepting {
+  outline: 1px solid black;
+  outline-offset: -6px;
+}
+
+.control.starting {
+  text-decoration: underline;
+}
+
+.window {
+  z-index: 20;
+}
+
+.jtk-connector {
+    z-index: 4;
+}
+
+.jtk-endpoint {
+    z-index: 5;
+}
+
+.jtk-overlay {
+    z-index: 6;
+}
+
+
+
+
+
+
+/* Context menu */
+
+.context-menu-link {
+  display: block;
+  padding: 20px;
+  background: #ECECEC;
+}
+
+.context-menu {
+  position: absolute;
+  display: none;
+  z-index: 3000;
+}
+
+.context-menu ul,
+#context-menu li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: white;
+}
+
+.context-menu {
+  border: solid 1px #CCC;
+}
+
+.context-menu li {
+  border-bottom: solid 1px #CCC;
+}
+
+.context-menu li:last-child {
+  border: none;
+}
+
+.context-menu li a {
+  display: block;
+  padding: 5px 10px;
+  text-decoration: none;
+  color: blue;
+}
+
+.context-menu li a:hover {
+  background: blue;
+  color: #FFF;
+}
