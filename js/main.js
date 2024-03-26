@@ -111,19 +111,6 @@ instance.bind("ready", function () {
             bodyContextMenu.style.display = "none";
         }
     });
-
-    // $("body").on("contextmenu", "#diagram .jtk-connector", function (event) {
-    //     event.preventDefault();
-    //     window.selectedConnection = $(this).attr("id");
-    //     transitionContextMenu.style.left = event.pageX + 'px'
-    //     transitionContextMenu.style.top = event.pageY + 'px'
-    //     transitionContextMenu.style.display = 'block'
-    //     stateContextMenu.style.display = "none";
-    //     bodyContextMenu.style.display = "none";
-    // });
-    // Can't use this approach, since the connections that are made from drag
-    // and drop do not have an ID, so there is no way of identifying them.
-    // So we have to use the method above that has the 'component' passed to it
     
     // State context menu handler
     $("body").on("contextmenu", "#diagram .control", function (event) {
