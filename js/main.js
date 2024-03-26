@@ -175,11 +175,8 @@ instance.bind("ready", function () {
         let y = event.pageY - rect.top;
 
         const el = document.createElement('div')
+        el.innerText = "s" + numStates;
         el.id = uuidv4()
-
-        const handleEl = document.createElement('div')
-        handleEl.innerText = "s" + numStates;
-        el.appendChild(handleEl)
 
         el.className += "control"
 
