@@ -30,12 +30,12 @@ html {
 }
 
 .control.accepting {
-  outline: 1px solid black;
-  outline-offset: -6px;
+  outline: 2px solid black;
+  outline-offset: -8px;
 }
 
 .control.starting {
-  text-decoration: underline;
+  border-style: dashed;
 }
 
 .window {
