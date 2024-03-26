@@ -12,6 +12,8 @@ var transitionContextMenu = document.getElementById('transition-context-menu');
 var bodyContextMenu = document.getElementById('body-context-menu');
 var numStates = 2;
 
+var model = NFA();
+
 instance = jsPlumb.getInstance({});
 instance.setContainer("diagram");
 
