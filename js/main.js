@@ -97,8 +97,7 @@ instance.bind("connection", function (info) {
         instance.deleteConnection(connection);
     }
     transitionCharacters = transitionCharacters.split(",");
-    // TODO: more normalisation will be ideal later for characters
-    console.log(transitionCharacters);
+    // TODO: more normalisation will be ideal for the characters
     transitionCharacters.forEach(function (character) {
         model.addTransition(sourceName, character, targetName);
     });
@@ -161,7 +160,15 @@ instance.bind("ready", function () {
     });
 
     $("body").on("click", ".toggle-accepting-state", function (event) {
-        document.getElementById(window.selectedControl).classList.toggle("accepting");
+        let state = document.getElementById(window.selectedControl);
+        let stateName = state.innerHTML;
+        if (model.acceptStates.includes(stateName)) {
+            state.classList.remove("accepting");
+            model.acceptStates.splice(model.acceptStates.indexOf(stateName));
+        } else {
+            state.classList.add("accepting");
+            model.acceptStates.push(stateName);
+        }
     });
 
     $("body").on("click", ".make-starting-state", function (event) {

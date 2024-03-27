@@ -23,11 +23,16 @@ NFA.prototype.setStartState = function (state) {
 }
 
 NFA.prototype.addAcceptState = function (state) {
-    this.acceptStates.push(state);
+    if (!this.acceptStates.includes(state)) {
+        this.acceptStates.push(state);
+    }
 }
 
 NFA.prototype.removeAcceptState = function (state) {
-
+    if (this.acceptStates.includes(state)) {
+        let index = this.acceptStates.indexOf(state);
+        this.acceptStates.splice(index);
+    }
 }
 
 NFA.prototype.addTransition = function (stateA, character, stateB) {
