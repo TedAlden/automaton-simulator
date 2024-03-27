@@ -52,7 +52,7 @@ var transitionContextMenu = document.getElementById('transition-context-menu');
 var bodyContextMenu = document.getElementById('body-context-menu');
 var numStates = 0;
 
-var model = NFA();
+var model = new NFA();
 
 instance = jsPlumb.getInstance({});
 instance.setContainer("diagram");
@@ -86,6 +86,22 @@ instance.registerConnectionTypes({
             ]
         ]
     }
+});
+
+instance.bind("connection", function (info) {
+    let sourceName = info.source.innerText;
+    let targetName = info.target.innerText;
+    let connection = info.connection;
+    let transitionCharacters = prompt("Enter the characters for this transition separated by commas.");
+    if (transitionCharacters === null || transitionCharacters === "") {
+        instance.deleteConnection(connection);
+    }
+    transitionCharacters = transitionCharacters.split(",");
+    // TODO: more normalisation will be ideal later for characters
+    console.log(transitionCharacters);
+    transitionCharacters.forEach(function (character) {
+        model.addTransition(sourceName, character, targetName);
+    });
 });
 
 instance.bind("ready", function () {
