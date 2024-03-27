@@ -6,11 +6,51 @@ function uuidv4() {
     });
 }
 
+function createStateElement (id, name) {
+    const state = document.createElement('div');
+    state.innerText = name;
+    state.id = id;
+    state.className += "control";
+    state.style.position = 'absolute';
+    return state;
+}
+
+function addStateElementToDiagram (instance, state, x, y) {
+    state.style.left = `${x}px`;
+    state.style.top = `${y}px`;
+    instance.getContainer().appendChild(state);
+    instance.draggable(state.id, { "containment": true });
+    instance.addEndpoint(state.id, {
+        endpoint: [
+            "Dot",
+            {
+                radius:7
+            }
+        ],
+        anchor: ["RightMiddle"],
+        maxConnections: -1,
+        isSource: true,
+        connectionType: "default-connection"
+    });
+    instance.addEndpoint(state.id, {
+        endpoint: [
+            "Dot",
+            {
+                radius:7
+            }
+        ],
+        anchor: ["LeftMiddle"],
+        maxConnections: -1,
+        isTarget: true,
+        connectionType: "default-connection"
+    });
+    numStates++;
+}
 
 var stateContextMenu = document.getElementById('state-context-menu');
 var transitionContextMenu = document.getElementById('transition-context-menu');
 var bodyContextMenu = document.getElementById('body-context-menu');
-var numStates = 2;
+var numStates = 0;
 
 var model = NFA();
 
@@ -49,57 +89,9 @@ instance.registerConnectionTypes({
 });
 
 instance.bind("ready", function () {
-    instance.draggable("control1", { containment: true })
-    instance.draggable("control2", { containment: true })
-    instance.addEndpoint("control1", {
-        endpoint: [
-            "Dot",
-            {
-                radius:6
-            }
-        ],
-        anchor: ["RightMiddle"],
-        isSource: true,
-        connectionType: "default-connection",
-        maxConnections: -1
-    });
-    instance.addEndpoint("control1", {
-        endpoint: [
-            "Dot",
-            {
-                radius:6
-            }
-        ],
-        anchor: ["LeftMiddle"],
-        maxConnections: -1,
-        isTarget: true,
-        connectionType: "default-connection"
-    });
-    instance.addEndpoint("control2", {
-        endpoint: [
-            "Dot",
-            {
-                radius:6
-            }
-        ],
-        anchor: ["RightMiddle"],
-        isSource: true,
-        connectionType: "default-connection",
-        maxConnections: -1
-    });
-    instance.addEndpoint("control2", {
-        endpoint: [
-            "Dot",
-            {
-                radius:6
-            }
-        ],
-        anchor: ["LeftMiddle"],
-        maxConnections: -1,
-        isTarget: true,
-        connectionType: "default-connection",
-        maxConnections: -1
-    });
+    // Create an initial starting state
+    const state1 = createStateElement(uuidv4(), "s"+numStates);
+    addStateElementToDiagram(instance, state1, 100, 100);
 
     // Transition context menu handler
     instance.bind("contextmenu", function (component, event) {
@@ -175,46 +167,7 @@ instance.bind("ready", function () {
         let rect = instance.getContainer().getBoundingClientRect();
         let x = event.pageX - rect.left;
         let y = event.pageY - rect.top;
-
-        const el = document.createElement('div')
-        el.innerText = "s" + numStates;
-        el.id = uuidv4()
-
-        el.className += "control"
-
-        el.style.position = 'absolute'
-        el.style.left = `${x}px`
-        el.style.top = `${y}px`
-
-        numStates++;
-
-        // append this new state element to the jsplumb canvas
-        instance.getContainer().appendChild(el)
-        instance.draggable(el.id, { "containment": true });
-        instance.addEndpoint(el.id, {
-            endpoint: [
-                "Dot",
-                {
-                    radius:7
-                }
-            ],
-            anchor: ["RightMiddle"],
-            maxConnections: -1,
-            isSource: true,
-            connectionType: "default-connection"
-        });
-
-        instance.addEndpoint(el.id, {
-            endpoint: [
-                "Dot",
-                {
-                    radius:7
-                }
-            ],
-            anchor: ["LeftMiddle"],
-            maxConnections: -1,
-            isTarget: true,
-            connectionType: "default-connection"
-        });
+        const state = createStateElement(uuidv4(), "s"+numStates);
+        addStateElementToDiagram(instance, state, x, y);
     });
 });
