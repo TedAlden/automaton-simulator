@@ -146,17 +146,14 @@ instance.bind("ready", function () {
 
     $("body").on("click", ".toggle-accepting-state", function (event) {
         document.getElementById(window.selectedControl).classList.toggle("accepting");
-        console.log(window.selectedControl)
     });
 
     $("body").on("click", ".make-starting-state", function (event) {
         document.getElementById(window.selectedControl).classList.add("starting")
-        console.log(window.selectedControl)
     });
 
     $("body").on("click", ".delete-transition", function (event) {
         instance.deleteConnection(window.selectedConnection);
-        console.log(window.selectedConnection)
     });
 
     $("body").on("click", ".edit-transition", function (event) {
