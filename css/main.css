@@ -1,8 +1,7 @@
 html {
-  -webkit-user-select: none; /* Safari */
-  -ms-user-select: none; /* IE 10 and IE 11 */
-  user-select: none; /* Standard syntax */
-
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 #diagram {
@@ -22,10 +21,7 @@ html {
   text-align: center;
   line-height: 64px;
   cursor: move;
-  /* height: fit-content;
-  height: -moz-max-content; */
   background-color: white;
-  /* outline-style: double; */
   position: absolute;
 }
 
@@ -43,49 +39,34 @@ html {
 }
 
 .jtk-connector {
-    z-index: 4;
+  z-index: 4;
 }
 
 .jtk-endpoint {
-    z-index: 5;
+  z-index: 5;
 }
 
 .jtk-overlay {
-    z-index: 6;
-    background-color: rgba(220, 220, 220, 0.9);
-    padding: 2px 5px;
-    border-radius: 50vh;
+  z-index: 6;
+  background-color: rgba(220, 220, 220, 0.9);
+  padding: 2px 5px;
+  border-radius: 50vh;
 }
-
-
-
-
-
 
 /* Context menu */
 
-.context-menu-link {
-  display: block;
-  padding: 20px;
-  background: #ECECEC;
-}
-
 .context-menu {
+  border: solid 1px #CCC;
   position: absolute;
   display: none;
   z-index: 3000;
 }
 
-.context-menu ul,
-#context-menu li {
+.context-menu ul {
   list-style: none;
   margin: 0;
   padding: 0;
   background: white;
-}
-
-.context-menu {
-  border: solid 1px #CCC;
 }
 
 .context-menu li {
