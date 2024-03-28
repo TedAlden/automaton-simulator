@@ -80,9 +80,15 @@ instance.registerConnectionTypes({
             [
                 "Arrow", 
                 {
-                    location: 0.99,
+                    location: 1,
                     width: 20,
-                    length:20,
+                    length: 20,
+                }
+            ],
+            [
+                "Label",
+                {
+                    location: 0.5
                 }
             ]
         ]
@@ -102,6 +108,7 @@ instance.bind("connection", function (info) {
     transitionCharacters.forEach(function (character) {
         model.addTransition(sourceName, character, targetName);
     });
+    connection.setLabel(transitionCharacters.join(","));
 });
 
 instance.bind("ready", function () {

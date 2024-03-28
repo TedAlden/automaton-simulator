@@ -52,6 +52,9 @@ html {
 
 .jtk-overlay {
     z-index: 6;
+    background-color: rgba(220, 220, 220, 0.9);
+    padding: 2px 5px;
+    border-radius: 50vh;
 }
 
 
