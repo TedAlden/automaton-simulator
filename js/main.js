@@ -8,6 +8,7 @@ function uuidv4() {
 
 function createStateElement (id, name) {
     const state = document.createElement('div');
+    state.dataset.stateName = name;
     state.innerText = name;
     state.id = id;
     state.className += "control";
@@ -172,7 +173,16 @@ instance.bind("ready", function () {
     });
 
     $("body").on("click", ".make-starting-state", function (event) {
-        document.getElementById(window.selectedControl).classList.add("starting")
+        let oldStart = document.querySelector(`[data-state-name='${model.startState}']`);
+        let state = document.getElementById(window.selectedControl);
+        let stateName = state.innerHTML;
+        if (!state.classList.contains("starting")) {
+            state.classList.add("starting");
+            model.setStartState(stateName);
+            if (oldStart !== null) {
+                oldStart.classList.remove("starting");
+            }
+        }
     });
 
     $("body").on("click", ".delete-transition", function (event) {
