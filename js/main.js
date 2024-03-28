@@ -100,15 +100,21 @@ instance.bind("connection", function (info) {
     let targetName = info.target.innerText;
     let connection = info.connection;
     let transitionCharacters = prompt("Enter the characters for this transition separated by commas.");
+    // TODO: check that a transition does not already exist between these states
     if (transitionCharacters === null || transitionCharacters === "") {
         instance.deleteConnection(connection);
+    } else {
+        transitionCharacters = transitionCharacters
+                                .replace(/[^a-zA-Z0-9,]/g, "")
+                                .toLowerCase()
+                                .split(",")
+                                .filter(char => char.length == 1);
+        // TODO: filter out duplicate transition characters
+        transitionCharacters.forEach(function (character) {
+            model.addTransition(sourceName, character, targetName);
+        });
+        connection.setLabel(transitionCharacters.join(","));
     }
-    transitionCharacters = transitionCharacters.split(",");
-    // TODO: more normalisation will be ideal for the characters
-    transitionCharacters.forEach(function (character) {
-        model.addTransition(sourceName, character, targetName);
-    });
-    connection.setLabel(transitionCharacters.join(","));
 });
 
 instance.bind("ready", function () {
