@@ -28,28 +28,18 @@ function addStateElementToDiagram (instance, state, x, y) {
     instance.getContainer().appendChild(state);
     instance.draggable(state.id, { "containment": true });
     instance.addEndpoint(state.id, {
-        endpoint: [
-            "Dot",
-            {
-                radius:7
-            }
-        ],
-        anchor: ["RightMiddle"],
-        maxConnections: -1,
+        endpoint: [ "Dot", { radius: 6 } ],
+        anchor: [ "Perimeter", { shape: "Circle"} ],
         isSource: true,
-        connectionType: "default-connection"
-    });
-    instance.addEndpoint(state.id, {
-        endpoint: [
-            "Dot",
-            {
-                radius:7
-            }
-        ],
-        anchor: ["LeftMiddle"],
         maxConnections: -1,
-        isTarget: true,
-        connectionType: "default-connection"
+        connectionType: "default-connection",
+        connectionsDetachable: false
+    });
+    instance.makeTarget(state, {
+        endpoint: [ "Dot", { radius: 1 } ],
+        anchor: [ "Perimeter", { shape: "Circle"} ],
+        connectionType: "default-connection",
+        connectionsDetachable: false
     });
     numStates++;
 }
