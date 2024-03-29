@@ -135,37 +135,12 @@ instance = jsPlumb.getInstance({});
 instance.setContainer("diagram");
 instance.registerConnectionTypes({
     "default-connection": {
-        // anchor:[ "Perimeter", { shape:"Circle"} ],
-        // anchor: ["AutoDefault"],
-        paintStyle: {
-            stroke: "#000", /* rgb(68, 85, 102) */
-            strokeWidth: 2
-        },
-        hoverPaintStyle: {
-            stroke: "green",
-            strokeWidth: 6
-        },
-        connector: [
-            "StateMachine",
-            {
-                curviness: -20
-            }
-        ],
+        paintStyle: { stroke: "#000",  strokeWidth: 2 },
+        hoverPaintStyle: { stroke: "green", strokeWidth: 6 },
+        connector: [ "StateMachine", { curviness: -20 } ],
         overlays: [
-            [
-                "Arrow", 
-                {
-                    location: 1,
-                    width: 20,
-                    length: 20,
-                }
-            ],
-            [
-                "Label",
-                {
-                    location: 0.5
-                }
-            ]
+            [ "Arrow", { location: 1, width: 20, length: 20 } ],
+            [ "Label", { location: 0.5 } ]
         ]
     }
 });
