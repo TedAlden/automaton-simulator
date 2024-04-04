@@ -4,6 +4,14 @@ html {
   user-select: none;
 }
 
+* {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
 /* Layout */
 
 #main-container {
@@ -19,6 +27,7 @@ html {
   width: 195px;
   height: calc(100vh - 10px);
   margin: 5px 0 5px 5px;
+  padding: 12px;
   float: left;
   border-radius: 3px;
 }
@@ -35,6 +44,16 @@ html {
 #diagram {
   height: 100%;
   position: relative;
+}
+
+/* Toolbox */
+
+#toolbox-wrapper label {
+  font-size: 13px;
+}
+
+#toolbox-wrapper input {
+  font-size: 14px;
 }
 
 /* Controls (state nodes) */

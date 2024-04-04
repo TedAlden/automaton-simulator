@@ -14,7 +14,20 @@
     <div id="main-container">
       <!-- Toolbox for inputs and interraction with automaton -->
       <div id="toolbox-wrapper">
-        Toolbox...
+        <!-- Enter input string for automaton -->
+        <label for="enter-string">Enter string</label>
+        <input class="w-100" id="enter-string" type="text">
+        <!-- Simulation controls (stop simulation, and next step) -->
+        <label for="simulator">Simulation controls</label>
+        <div class="btn-group w-100" role="group" aria-label="simulator">
+          <button class="btn btn-outline-primary btn-sm" id="step-simulation" disabled>Stop</button>
+          <button class="btn btn-outline-primary btn-sm" id="stop-simulation">Next</button>
+        </div>
+        <input class="w-100" type="text" value="" disabled>
+        <!-- Test string instantaneously -->
+        <label for="instant-simulation">Test string</label>
+        <button class="btn btn-outline-primary btn-sm w-100" id="instant-simulation">Test</button>
+        <input class="w-100" type="text" value="" disabled>
       </div>
       <!-- Diagram/canvas for the visualisation of the automaton -->
       <div id="diagram-wrapper">
