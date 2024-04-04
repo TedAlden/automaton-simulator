@@ -4,10 +4,36 @@ html {
   user-select: none;
 }
 
+/* Layout */
+
+#main-container {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background: lightgrey;
+  display: flex;
+}
+
+#toolbox-wrapper {
+  background: white;
+  width: 195px;
+  height: calc(100vh - 10px);
+  margin: 5px 0 5px 5px;
+  float: left;
+  border-radius: 3px;
+}
+
+#diagram-wrapper {
+  background: white;
+  width: calc(100% - 210px);
+  height: calc(100vh - 10px);
+  margin: 5px;
+  display: inline-block;
+  border-radius: 3px;
+}
+
 #diagram {
-  margin: 12px 0;
-  border: 2px solid lightgrey;
-  height: calc(100vh - 24px);
+  height: 100%;
   position: relative;
 }
 
