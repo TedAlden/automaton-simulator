@@ -119,7 +119,19 @@ $(".context-menu").on("click", ".delete-transition", function (event) {
 
 // Context menu -> Edit transition
 $(".context-menu").on("click", ".edit-transition", function (event) {
-    prompt("Edit transitions.");
+    let sourceName = window.selectedConnection.source.dataset.stateName;
+    let targetName = window.selectedConnection.target.dataset.stateName;
+    let characters = [];
+    for (character in model.transitions[sourceName]) {
+        if (model.transitions[sourceName][character].includes(targetName)) {
+            characters.push(character);
+        }
+    }
+    prompt("Edit transitions.", characters.join(","));
+    // TODO: Update the transitions in the model
+    // ...
+    // TODO: Update the connection label
+    // ...
 });
 
 // Context menu -> Create state
