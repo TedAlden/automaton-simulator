@@ -135,7 +135,7 @@ $(".context-menu").on("click", ".edit-transition", function (event) {
 });
 
 // Context menu -> Create state
-$(".context-menu").on("click", ".create-control", function (event) {
+$(".context-menu").on("click", ".create-state", function (event) {
     let rect = instance.getContainer().getBoundingClientRect();
     let x = event.pageX - rect.left;
     let y = event.pageY - rect.top;
