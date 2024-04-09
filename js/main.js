@@ -69,7 +69,6 @@ $("#diagram").on("contextmenu", function (event) {
 
 // Hide context menus when anywhere is left clicked
 $(document).bind("click", function (event) {
-    $("div.custom-menu").remove();
     stateContextMenu.style.display = 'none'
     transitionContextMenu.style.display = "none";
     bodyContextMenu.style.display = "none";
