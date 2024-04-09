@@ -37,27 +37,27 @@
     
     <!-- Context menu for right-clicking on automaton states -->
     <div id="state-context-menu" class="context-menu">
-      <ul>
-        <li class="delete-state"><a href="#">Delete State</a></li>
-        <li class="rename-state"><a href="#">Rename State</a></li>
-        <li class="toggle-accepting-state"><a href="#">Toggle Accepting State</a></li>
-        <li class="make-starting-state"><a href="#">Make Starting State</a></li>
-      </ul>
+      <div class="btn-group-vertical">
+        <button class="btn btn-outline-primary btn-sm delete-state">Delete State</button>
+        <button class="btn btn-outline-primary btn-sm rename-state">Rename State</button>
+        <button class="btn btn-outline-primary btn-sm toggle-accepting-state">Toggle Accepting State</button>
+        <button class="btn btn-outline-primary btn-sm make-starting-state">Make Starting State</button>
+      </div>
     </div>
     
     <!-- Context menu for right-clicking on automaton transitions -->
     <div id="transition-context-menu" class="context-menu">
-      <ul>
-        <li class="delete-transition"><a href="#">Delete Transition</a></li>
-        <li class="edit-transition"><a href="#">Edit Transition</a></li>
-      </ul>
+      <div class="btn-group-vertical">
+        <button class="btn btn-outline-primary btn-sm delete-transition">Delete Transition</button>
+        <button class="btn btn-outline-primary btn-sm edit-transition">Edit Transition</button>
+      </div>
     </div>
 
     <!-- Context menu for right-clicking on an empty part of the diagram -->
     <div id="body-context-menu" class="context-menu">
-      <ul>
-        <li class="create-state"><a href="#">Create State</a></li>
-      </ul>
+      <div class="btn-group-vertical">
+        <button class="btn btn-outline-primary btn-sm create-state">Create State</button>
+      </div>
     </div>
 
     <!-- Script imports -->
