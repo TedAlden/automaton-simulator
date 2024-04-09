@@ -143,6 +143,13 @@ $(".context-menu").on("click", ".create-state", function (event) {
     addStateElementToDiagram(instance, state, x, y);
 });
 
+// Toolbox -> Test string
+$("#toolbox-wrapper").on("click", "#instant-simulation", function (event) {
+    let string = $('#enter-string').val();
+    let outputBox = $('#instant-simulation-output');
+    outputBox.val(model.accepts(string) ? "Accepted" : "Rejected");
+});
+
 instance = jsPlumb.getInstance({});
 instance.setContainer("diagram");
 instance.registerConnectionTypes({
@@ -194,7 +201,10 @@ instance.bind("contextmenu", function (component, event) {
 
 instance.bind("ready", function () {
     // Create an initial starting state
-    const state1 = createStateElement(uuidv4(), "s"+numStates);
-    addStateElementToDiagram(instance, state1, 100, 100); 
+    let stateName = "s" + numStates;
+    const state1 = createStateElement(uuidv4(), stateName);
+    addStateElementToDiagram(instance, state1, 100, 100);
+    state1.classList.add("starting")
+    model.setStartState(stateName);
 });
 
