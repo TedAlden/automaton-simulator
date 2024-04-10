@@ -173,10 +173,10 @@ $("#toolbox-wrapper").on("click", "#start-simulation", function (event) {
 
 // Toolbox -> Step simulation
 $("#toolbox-wrapper").on("click", "#step-simulation", function (event) {
+    highlightedTransitions.forEach(transition => transition.setPaintStyle({ stroke: "black", strokeWidth: 2 }));
     if (model.simulator.status === "running") {
         // Unhighlight all of transitions and states from the previous step
         highlightedStates.forEach(state => $(state).removeClass("highlighted"));
-        highlightedTransitions.forEach(transition => transition.setPaintStyle({ stroke: "black", strokeWidth: 2 }));
         let previousStates = highlightedStates;
         highlightedStates = [];
         // Perform one step of the automaton
@@ -201,7 +201,7 @@ $("#toolbox-wrapper").on("click", "#step-simulation", function (event) {
         });
     }
     // Check for acceptance or rejection after the step completes
-    if (model.simulator.status !== "running") {
+    else if (model.simulator.status !== "running") {
         $("#stop-simulation").prop("disabled", false);
         $("#start-simulation").prop("disabled", true);
         $("#step-simulation").prop("disabled", true);
