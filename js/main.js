@@ -195,7 +195,7 @@ instance.registerConnectionTypes({
     "default-connection": {
         paintStyle: { stroke: "#000",  strokeWidth: 2 },
         hoverPaintStyle: { stroke: "green", strokeWidth: 6 },
-        connector: [ "StateMachine", { curviness: -20 } ],
+        connector: [ "StateMachine" ],
         overlays: [
             [ "Arrow", { location: 1, width: 20, length: 20 } ],
             [ "Label", { location: 0.5 } ]
