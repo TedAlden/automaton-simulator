@@ -4,6 +4,7 @@ var bodyContextMenu = document.getElementById('body-context-menu');
 var numStates = 0;
 var model = new NFA();
 var highlightedStates = [];
+var highlightedTransitions = [];
 
 // https://stackoverflow.com/a/2117523
 function uuidv4() {
@@ -153,6 +154,7 @@ $("#toolbox-wrapper").on("click", "#instant-simulation", function (event) {
 // Toolbox -> Stop simulation
 $("#toolbox-wrapper").on("click", "#stop-simulation", function (event) {
     highlightedStates.forEach(state => $(state).removeClass("highlighted"));
+    highlightedTransitions.forEach(transition => transition.setPaintStyle({ stroke: "black", strokeWidth: 2}));
     $("#stop-simulation").prop("disabled", true);
     $("#start-simulation").prop("disabled", false);
     $("#step-simulation").prop("disabled", true);
@@ -172,12 +174,30 @@ $("#toolbox-wrapper").on("click", "#start-simulation", function (event) {
 // Toolbox -> Step simulation
 $("#toolbox-wrapper").on("click", "#step-simulation", function (event) {
     if (model.simulator.status === "running") {
+        // Unhighlight all of transitions and states from the previous step
         highlightedStates.forEach(state => $(state).removeClass("highlighted"));
+        highlightedTransitions.forEach(transition => transition.setPaintStyle({ stroke: "black", strokeWidth: 2 }));
+        let previousStates = highlightedStates;
+        highlightedStates = [];
+        // Perform one step of the automaton
         model.step();
+        // Highlight newly active states and transitions
         model.simulator.states.forEach(stateName => {
+            // Highlight the active state
             let highlightedState = $("#diagram").find(`[data-state-name='${stateName}']`);
             $(highlightedState).addClass("highlighted");
             highlightedStates.push(highlightedState);
+            // Highlight the transitions that lead to the current states
+            previousStates.forEach(previousState => {
+                let connection = instance.getConnections({
+                    source: previousState,
+                    target: highlightedState
+                })[0];
+                if (connection) {
+                    highlightedTransitions.push(connection);
+                    connection.setPaintStyle({ stroke: "green", strokeWidth: 2 });
+                }
+            })
         });
     }
     // Check for acceptance or rejection after the step completes
