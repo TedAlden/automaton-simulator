@@ -70,6 +70,13 @@ body {
   position: absolute;
 }
 
+.control.highlighted {
+  border-color: green;
+  outline-color: green !important;
+  color: green;
+  background-color: lightgreen;
+}
+
 .control.accepting {
   outline: 2px solid black;
   outline-offset: -8px;

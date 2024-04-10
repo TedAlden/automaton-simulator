@@ -3,6 +3,7 @@ var transitionContextMenu = document.getElementById('transition-context-menu');
 var bodyContextMenu = document.getElementById('body-context-menu');
 var numStates = 0;
 var model = new NFA();
+var highlightedStates = [];
 
 // https://stackoverflow.com/a/2117523
 function uuidv4() {
@@ -147,6 +148,45 @@ $("#toolbox-wrapper").on("click", "#instant-simulation", function (event) {
     let string = $('#enter-string').val();
     let outputBox = $('#instant-simulation-output');
     outputBox.val(model.accepts(string) ? "Accepted" : "Rejected");
+});
+
+// Toolbox -> Stop simulation
+$("#toolbox-wrapper").on("click", "#stop-simulation", function (event) {
+    highlightedStates.forEach(state => $(state).removeClass("highlighted"));
+    $("#stop-simulation").prop("disabled", true);
+    $("#start-simulation").prop("disabled", false);
+    $("#step-simulation").prop("disabled", true);
+    $("#instant-simulation").prop("disabled", false);
+    $("#simulation-output").val("");
+});
+
+// Toolbox -> Start simulation
+$("#toolbox-wrapper").on("click", "#start-simulation", function (event) {
+    model.initializeSimulator($('#enter-string').val());
+    $("#stop-simulation").prop("disabled", false);
+    $("#start-simulation").prop("disabled", true);
+    $("#step-simulation").prop("disabled", false);
+    $("#instant-simulation").prop("disabled", true);
+});
+
+// Toolbox -> Step simulation
+$("#toolbox-wrapper").on("click", "#step-simulation", function (event) {
+    if (model.simulator.status === "running") {
+        highlightedStates.forEach(state => $(state).removeClass("highlighted"));
+        model.step();
+        model.simulator.states.forEach(stateName => {
+            let highlightedState = $("#diagram").find(`[data-state-name='${stateName}']`);
+            $(highlightedState).addClass("highlighted");
+            highlightedStates.push(highlightedState);
+        });
+    }
+    // Check for acceptance or rejection after the step completes
+    if (model.simulator.status !== "running") {
+        $("#stop-simulation").prop("disabled", false);
+        $("#start-simulation").prop("disabled", true);
+        $("#step-simulation").prop("disabled", true);
+        $("#simulation-output").val(model.simulator.status === "accept" ? "Accepted" : "Rejected");
+    }
 });
 
 instance = jsPlumb.getInstance({});
