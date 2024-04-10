@@ -58,7 +58,7 @@ body {
 
 /* Controls (state nodes) */
 
-.control {    
+.control {
   border-radius: 100%;
   border: 2px solid black;
   width: 64px;
@@ -66,7 +66,7 @@ body {
   text-align: center;
   line-height: 64px;
   cursor: move;
-  background-color: white;
+  background-color: #eee;
   position: absolute;
 }
 
