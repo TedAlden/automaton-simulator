@@ -4,20 +4,21 @@ function runTests() {
     }
 
     // create test NFA
-    var testNFA = new NFA()
-    testNFA.addTransition('s0', 'a', 's1')
-    testNFA.addTransition('s1', 'a', 's2')
-    testNFA.addTransition('s1', 'c', 's3')
-    testNFA.addTransition('s2', 'b', 's4')
-    testNFA.setStartState('s0');
-    testNFA.addAcceptState('s3');
-    testNFA.addAcceptState('s4');
+    let model = new NFAModel();
+    model.addTransition('s0', 'a', 's1');
+    model.addTransition('s1', 'a', 's2');
+    model.addTransition('s1', 'c', 's3');
+    model.addTransition('s2', 'b', 's4');
+    model.setStartState('s0');
+    model.addAcceptState('s3');
+    model.addAcceptState('s4');
     
     // run tests
-    assert(testNFA.accepts('aab'), 'Accept aab');
-    assert(testNFA.accepts('ac'), 'Accept ac');
-    assert(!testNFA.accepts(''), 'Reject empty string');
-    assert(!testNFA.accepts('a'), 'Reject a');
-    assert(!testNFA.accepts('aa'), 'Reject aa');
-    assert(!testNFA.accepts('ab'), 'Reject ab');
+    let simulator = new NFASimulator(model);
+    assert(simulator.accepts('aab'), 'Accept aab');
+    assert(simulator.accepts('ac'), 'Accept ac');
+    assert(!simulator.accepts(''), 'Reject empty string');
+    assert(!simulator.accepts('a'), 'Reject a');
+    assert(!simulator.accepts('aa'), 'Reject aa');
+    assert(!simulator.accepts('ab'), 'Reject ab');
 }

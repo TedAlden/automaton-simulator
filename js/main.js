@@ -2,7 +2,8 @@ var stateContextMenu = document.getElementById('state-context-menu');
 var transitionContextMenu = document.getElementById('transition-context-menu');
 var bodyContextMenu = document.getElementById('body-context-menu');
 var numStates = 0;
-var model = new NFA();
+var model = new NFAModel();
+var nfa = new NFASimulator(model);
 var highlightedStates = [];
 var highlightedTransitions = [];
 
@@ -90,23 +91,23 @@ $(".context-menu").on("click", ".rename-state", function (event) {
 $(".context-menu").on("click", ".toggle-accepting-state", function (event) {
     let state = document.getElementById(window.selectedControl);
     let stateName = state.innerHTML;
-    if (model.acceptStates.includes(stateName)) {
+    if (nfa.model.acceptStates.includes(stateName)) {
         state.classList.remove("accepting");
-        model.acceptStates.splice(model.acceptStates.indexOf(stateName));
+        nfa.model.acceptStates.splice(nfa.model.acceptStates.indexOf(stateName));
     } else {
         state.classList.add("accepting");
-        model.acceptStates.push(stateName);
+        nfa.model.acceptStates.push(stateName);
     }
 });
 
 // Context menu -> Make starting state
 $(".context-menu").on("click", ".make-starting-state", function (event) {
-    let oldStart = document.querySelector(`[data-state-name='${model.startState}']`);
+    let oldStart = document.querySelector(`[data-state-name='${nfa.startState}']`);
     let state = document.getElementById(window.selectedControl);
     let stateName = state.innerHTML;
     if (!state.classList.contains("starting")) {
         state.classList.add("starting");
-        model.setStartState(stateName);
+        nfa.model.setStartState(stateName);
         if (oldStart !== null) {
             oldStart.classList.remove("starting");
         }
@@ -123,8 +124,8 @@ $(".context-menu").on("click", ".edit-transition", function (event) {
     let sourceName = window.selectedConnection.source.dataset.stateName;
     let targetName = window.selectedConnection.target.dataset.stateName;
     let characters = [];
-    for (character in model.transitions[sourceName]) {
-        if (model.transitions[sourceName][character].includes(targetName)) {
+    for (character in nfa.transitions[sourceName]) {
+        if (nfa.transitions[sourceName][character].includes(targetName)) {
             characters.push(character);
         }
     }
@@ -148,7 +149,7 @@ $(".context-menu").on("click", ".create-state", function (event) {
 $("#toolbox-wrapper").on("click", "#instant-simulation", function (event) {
     let string = $('#enter-string').val();
     let outputBox = $('#instant-simulation-output');
-    outputBox.val(model.accepts(string) ? "Accepted" : "Rejected");
+    outputBox.val(nfa.accepts(string) ? "Accepted" : "Rejected");
 });
 
 // Toolbox -> Stop simulation
@@ -164,7 +165,7 @@ $("#toolbox-wrapper").on("click", "#stop-simulation", function (event) {
 
 // Toolbox -> Start simulation
 $("#toolbox-wrapper").on("click", "#start-simulation", function (event) {
-    model.initializeSimulator($('#enter-string').val());
+    nfa.initialize($('#enter-string').val());
     $("#stop-simulation").prop("disabled", false);
     $("#start-simulation").prop("disabled", true);
     $("#step-simulation").prop("disabled", false);
@@ -174,15 +175,15 @@ $("#toolbox-wrapper").on("click", "#start-simulation", function (event) {
 // Toolbox -> Step simulation
 $("#toolbox-wrapper").on("click", "#step-simulation", function (event) {
     highlightedTransitions.forEach(transition => transition.setPaintStyle({ stroke: "black", strokeWidth: 2 }));
-    if (model.simulator.status === "running") {
+    if (nfa.status === "running") {
         // Unhighlight all of transitions and states from the previous step
         highlightedStates.forEach(state => $(state).removeClass("highlighted"));
         let previousStates = highlightedStates;
         highlightedStates = [];
         // Perform one step of the automaton
-        model.step();
+        nfa.step();
         // Highlight newly active states and transitions
-        model.simulator.states.forEach(stateName => {
+        nfa.states.forEach(stateName => {
             // Highlight the active state
             let highlightedState = $("#diagram").find(`[data-state-name='${stateName}']`);
             $(highlightedState).addClass("highlighted");
@@ -201,11 +202,11 @@ $("#toolbox-wrapper").on("click", "#step-simulation", function (event) {
         });
     }
     // Check for acceptance or rejection after the step completes
-    else if (model.simulator.status !== "running") {
+    else if (nfa.status !== "running") {
         $("#stop-simulation").prop("disabled", false);
         $("#start-simulation").prop("disabled", true);
         $("#step-simulation").prop("disabled", true);
-        $("#simulation-output").val(model.simulator.status === "accept" ? "Accepted" : "Rejected");
+        $("#simulation-output").val(nfa.status === "accept" ? "Accepted" : "Rejected");
     }
 });
 
@@ -239,7 +240,7 @@ instance.bind("connection", function (info) {
                                 .filter(char => char.length == 1);
         // TODO: filter out duplicate transition characters
         transitionCharacters.forEach(function (character) {
-            model.addTransition(sourceName, character, targetName);
+            nfa.model.addTransition(sourceName, character, targetName);
         });
         connection.setLabel(transitionCharacters.join(","));
     }
@@ -264,6 +265,6 @@ instance.bind("ready", function () {
     const state1 = createStateElement(uuidv4(), stateName);
     addStateElementToDiagram(instance, state1, 100, 100);
     state1.classList.add("starting")
-    model.setStartState(stateName);
+    nfa.model.setStartState(stateName);
 });
 

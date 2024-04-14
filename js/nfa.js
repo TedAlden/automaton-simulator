@@ -1,122 +1,130 @@
-function NFA () {
-    this.transitions = {};
-    this.startState = null;
-    this.acceptStates = [];
-
-    this.simulator = {
-        status: null, // "running", "accepted", "rejected"
-        nextStep: null,
-        input: null,
-        index: 0,
-        states: []
+class NFAModel {
+    constructor() {
+        this.transitions = {};
+        this.startState = null;
+        this.acceptStates = [];
     }
-}
 
-NFA.prototype.accepts = function (input) {
-    this.initializeSimulator(input);
-    while (this.simulator.status === "running") {
-        this.step();
-    }
-    return this.simulator.status === "accept";
-}
-
-NFA.prototype.initializeSimulator = function (input) {
-    this.simulator.status = "running";
-    this.simulator.nextStep = "epsilons";
-    this.simulator.input = input;
-    this.simulator.index = 0; // index of current character in input
-    this.simulator.states = [this.startState];
-}
-
-NFA.prototype.step = function () {
-    // finish checking epsilon transitions before checking character transitions
-    if (this.simulator.nextStep == "epsilons") {
-
-        ///
-
-        this.simulator.nextStep = "input";
-    } else if (this.simulator.nextStep == "input") {
-        let newStates = [];
-        let char = this.simulator.input.substr(this.simulator.index, 1);
-        let state = null;
-        while (state = this.simulator.states.shift()) {
-            let transitionStates = this.transition(state, char);
-            if (transitionStates) {
-                transitionStates.forEach(transitionState => {
-                    if (newStates.indexOf(transitionState) == -1) {
-                        newStates.push(transitionState);
-                    }
-                });
-            }
+    addTransition (stateA, character, stateB) {
+        if (!this.transitions[stateA]) {
+            this.transitions[stateA] = {};
         }
-        ++this.simulator.index;
-        this.simulator.states = newStates;
-        this.simulator.nextStep = "epsilons";
+        if (!this.transitions[stateA][character]) {
+            this.transitions[stateA][character] = [];
+        }
+        this.transitions[stateA][character].push(stateB);
     }
-    if (this.simulator.states.length == 0) {
-        this.simulator.status = "reject";
+
+    removeTransition (stateA, character, stateB) {
+
     }
-    if (this.simulator.index === this.simulator.input.length) {
-        this.simulator.states.forEach(state => {
-            if (this.acceptStates.indexOf(state) > -1) {
-                this.simulator.status = "accept";
-                return;
+
+    removeTransitions (state) {
+
+    }
+
+    isTransition (stateA, character, stateB) {
+        
+    }
+
+    doTransition (stateA, character) {
+        if (this.transitions[stateA]) {
+            return this.transitions[stateA][character];
+        } else {
+            return null;
+        }
+    }
+
+    addAcceptState (state) {
+        if (!this.acceptStates.includes(state)) {
+            this.acceptStates.push(state);
+        }
+    }
+
+    removeAcceptState (state) {
+        if (this.acceptStates.includes(state)) {
+            let index = this.acceptStates.indexOf(state);
+            this.acceptStates.splice(index);
+        }
+    }
+
+    isAcceptState (state) {
+        return this.acceptStates.indexOf(state) > -1;
+    }
+
+    setStartState (state) {
+        this.startState = state;
+    }
+
+    serialize () {
+
+    }
+
+    deserialize () {
+
+    }
+}
+
+class NFASimulator {
+    constructor(model) {
+        this.model = model;
+        this.status = null;
+        this.nextStep = null;
+        this.input = null;
+        this.index = 0;
+        this.states = [];
+    }
+
+    accepts (input) {
+        this.initialize(input);
+        while (this.status === "running") {
+            this.step();
+        }
+        return this.status === "accept";
+    }
+
+    initialize (input) {
+        this.status = "running";
+        this.nextStep = "epsilons";
+        this.input = input;
+        this.index = 0;
+        this.states = [this.model.startState];
+    }
+
+    step () {
+        if (this.nextStep == "epsilons") {
+
+            /// TODO:...
+
+            this.nextStep = "input";
+        } else if (this.nextStep == "input") {
+            let newStates = [];
+            let char = this.input.substr(this.index, 1);
+            let state = null;
+            while (state = this.states.shift()) {
+                let transitionStates = this.model.doTransition(state, char);
+                if (transitionStates) {
+                    transitionStates.forEach(transitionState => {
+                        if (newStates.indexOf(transitionState) == -1) {
+                            newStates.push(transitionState);
+                        }
+                    });
+                }
             }
-        });
-    }
-}
-
-NFA.prototype.setStartState = function (state) {
-    this.startState = state;
-}
-
-NFA.prototype.addAcceptState = function (state) {
-    if (!this.acceptStates.includes(state)) {
-        this.acceptStates.push(state);
-    }
-}
-
-NFA.prototype.removeAcceptState = function (state) {
-    if (this.acceptStates.includes(state)) {
-        let index = this.acceptStates.indexOf(state);
-        this.acceptStates.splice(index);
-    }
-}
-
-NFA.prototype.isAcceptState = function (state) {
-    
-}
-
-NFA.prototype.addTransition = function (stateA, character, stateB) {
-    if (!this.transitions[stateA]) {
-        this.transitions[stateA] = {};
-    }
-    if (!this.transitions[stateA][character]) {
-        this.transitions[stateA][character] = [];
-    }
-    this.transitions[stateA][character].push(stateB);
-}
-
-NFA.prototype.removeTransition = function (stateA, character, stateB) {
-
-}
-
-NFA.prototype.isTransition = function (stateA, character, stateB) {
-
-}
-
-NFA.prototype.transition = function(stateA, character) {
-    if (this.transitions[stateA]) {
-        return this.transitions[stateA][character];
-    } else {
-        return null;
-    }
-}
-
-NFA.prototype.serialize = function () {
-
-}
-
-NFA.prototype.deserialize = function () {
-
+            this.index++;
+            this.states = newStates;
+            this.nextStep = "epsilons";
+        }
+        if (this.states.length == 0) {
+            this.status = "reject";
+        }
+        if (this.index === this.input.length) {
+            this.states.forEach(state => {
+                if (this.model.isAcceptState(state)) {
+                    this.status = "accept";
+                    return;
+                }
+            });
+        }
+    } 
 }
