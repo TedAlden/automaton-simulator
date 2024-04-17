@@ -29,6 +29,12 @@
         <label for="instant-simulation">Test string</label>
         <button class="btn btn-outline-primary btn-sm w-100" id="instant-simulation">Test</button>
         <input class="w-100" id="instant-simulation-output" type="text" value="" disabled>
+        <!-- Save and load automata to/from JSON files -->
+        <label for="save-load-automata">Save/load automata</label>
+        <div class="btn-group-vertical w-100" role="group" aria-label="save-load">
+          <button class="btn btn-outline-primary btn-sm w-100" id="save-automata">Save to JSON</button>
+          <button class="btn btn-outline-primary btn-sm w-100" id="load-automata">Load from JSON</button>
+        </div>
       </div>
       <!-- Diagram/canvas for the visualisation of the automaton -->
       <div id="diagram-wrapper">
