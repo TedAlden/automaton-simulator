@@ -216,6 +216,19 @@ $("#toolbox-wrapper").on("click", "#step-simulation", function (event) {
     }
 });
 
+// Save automata to JSON file
+$("#toolbox-wrapper").on("click", "#save-automata", function (event) {
+    let json = nfa.model.serialize();
+    json.states = {};
+    let blob = new Blob([JSON.stringify(json)], {type: "application/json"});
+    window.location = window.URL.createObjectURL(blob);
+});
+
+// Load automata from JSON file
+$("#toolbox-wrapper").on("click", "#load-automata", function (event) {
+
+});
+
 instance = jsPlumb.getInstance({});
 instance.setContainer("diagram");
 instance.registerConnectionTypes({

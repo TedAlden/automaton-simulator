@@ -57,7 +57,11 @@ class NFAModel {
     }
 
     serialize () {
-
+        return {
+            transitions: this.transitions,
+            acceptStates: this.acceptStates,
+            startState: this.startState
+        };
     }
 
     deserialize () {
