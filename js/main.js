@@ -166,6 +166,11 @@ $("#toolbox-wrapper").on("click", "#stop-simulation", function (event) {
 // Toolbox -> Start simulation
 $("#toolbox-wrapper").on("click", "#start-simulation", function (event) {
     nfa.initialize($('#enter-string').val());
+    nfa.step();
+    // Highlight the active state
+    let highlightedState = $("#diagram").find(`[data-state-name='${nfa.model.startState}']`);
+    $(highlightedState).addClass("highlighted");
+    highlightedStates.push(highlightedState);
     $("#stop-simulation").prop("disabled", false);
     $("#start-simulation").prop("disabled", true);
     $("#step-simulation").prop("disabled", false);
@@ -181,6 +186,7 @@ $("#toolbox-wrapper").on("click", "#step-simulation", function (event) {
         let previousStates = highlightedStates;
         highlightedStates = [];
         // Perform one step of the automaton
+        nfa.step();
         nfa.step();
         // Highlight newly active states and transitions
         nfa.states.forEach(stateName => {
