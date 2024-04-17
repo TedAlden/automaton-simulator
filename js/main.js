@@ -102,7 +102,7 @@ $(".context-menu").on("click", ".toggle-accepting-state", function (event) {
 
 // Context menu -> Make starting state
 $(".context-menu").on("click", ".make-starting-state", function (event) {
-    let oldStart = document.querySelector(`[data-state-name='${nfa.startState}']`);
+    let oldStart = document.querySelector(`[data-state-name='${nfa.model.startState}']`);
     let state = document.getElementById(window.selectedControl);
     let stateName = state.innerHTML;
     if (!state.classList.contains("starting")) {
