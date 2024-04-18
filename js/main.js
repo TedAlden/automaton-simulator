@@ -220,6 +220,10 @@ $("#toolbox-wrapper").on("click", "#step-simulation", function (event) {
 $("#toolbox-wrapper").on("click", "#save-automata", function (event) {
     let json = nfa.model.serialize();
     json.states = {};
+    $("#diagram").find('div.control').each(function() {
+        json.states[this.dataset.stateName] = $(this).position();
+    });
+
     let blob = new Blob([JSON.stringify(json)], {type: "application/json"});
     window.location = window.URL.createObjectURL(blob);
 });
