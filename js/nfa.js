@@ -23,8 +23,16 @@ class NFAModel {
 
     }
 
-    isTransition (stateA, character, stateB) {
-        
+    hasTransition (stateA, stateB) {
+        let found = false;
+        if (this.transitions[stateA] !== null) {
+            Object.keys(this.transitions[stateA]).forEach(character => {
+                if (this.transitions[stateA][character].indexOf(stateB) > -1) {
+                    found = true;
+                }
+            });
+        }
+        return found;   
     }
 
     doTransition (stateA, character) {
