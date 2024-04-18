@@ -105,9 +105,28 @@ class NFASimulator {
 
     step () {
         if (this.nextStep == "epsilons") {
-
-            /// TODO:...
-
+            let changed = true;
+            while (changed) {
+                changed = false;
+                this.states.forEach(state => {
+                    let transitionStates = this.model.doTransition(state, "ε");
+                    if (transitionStates) {
+                        transitionStates.forEach(transitionState => {
+                            let match = false;
+                            this.states.forEach(checkState => {
+                                if (checkState == transitionState) {
+                                    match = true;
+                                    return false;
+                                }
+                            });
+                            if (!match) {
+                                changed = true;
+                                this.states.push(transitionState);
+                            }
+                        });
+                    }
+                });
+            }
             this.nextStep = "input";
         } else if (this.nextStep == "input") {
             let newStates = [];
