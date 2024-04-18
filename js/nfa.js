@@ -72,8 +72,10 @@ class NFAModel {
         };
     }
 
-    deserialize () {
-
+    deserialize (json) {
+        this.transitions = json.transitions;
+        this.acceptStates = json.acceptStates;
+        this.startState = json.startState;
     }
 }
 

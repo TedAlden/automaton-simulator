@@ -187,7 +187,6 @@ $("#toolbox-wrapper").on("click", "#step-simulation", function (event) {
         highlightedStates = [];
         // Perform one step of the automaton
         nfa.step();
-        nfa.step();
         // Highlight newly active states and transitions
         nfa.states.forEach(stateName => {
             // Highlight the active state
@@ -228,9 +227,72 @@ $("#toolbox-wrapper").on("click", "#save-automata", function (event) {
     window.location = window.URL.createObjectURL(blob);
 });
 
+async function parseJSONFile(file) {
+    return new Promise((resolve, reject) => {
+        const fileReader = new FileReader()
+        fileReader.onload = event => resolve(JSON.parse(event.target.result));
+        fileReader.onerror = error => reject(error);
+        fileReader.readAsText(file);
+    });
+}
+
 // Load automata from JSON file
 $("#toolbox-wrapper").on("click", "#load-automata", function (event) {
-
+    let input = document.createElement('input');
+    input.type = "file";
+    input.accept = "application/JSON";
+    input.onchange = async function (event) {
+        event.preventDefault();
+        const json = await parseJSONFile(input.files[0]);
+        model.deserialize(json);
+        // Place all of the states on the diagram
+        Object.keys(json.states).forEach(stateName => {
+            let stateElement = createStateElement(uuidv4(), stateName);
+            let x = json.states[stateName]["left"];
+            let y = json.states[stateName]["top"];
+            addStateElementToDiagram(instance, stateElement, x, y);
+            // Starting state
+            if (stateName === json.startState) {
+                stateElement.classList.add("starting");
+            }
+            // Accepting states
+            if (json.acceptStates.indexOf(stateName) > -1) {
+                stateElement.classList.add("accepting");
+            }
+        });
+        // Make transitions
+        Object.keys(json.transitions).forEach(stateAName => {
+            let stateATransitions = {};
+            Object.keys(json.transitions[stateAName]).forEach(character => {
+                json.transitions[stateAName][character].forEach(stateBName => {
+                    if (stateATransitions[stateBName] == null) {
+                        stateATransitions[stateBName] = [];
+                    }
+                    stateATransitions[stateBName].push(character);
+                })
+            });
+            console.log(stateAName, stateATransitions)
+            instance.unbind("connection");
+            Object.keys(stateATransitions).forEach(stateBName => {
+                let characters = stateATransitions[stateBName];
+                let stateA = $("#diagram").find(`[data-state-name='${stateAName}']`);
+                let stateB = $("#diagram").find(`[data-state-name='${stateBName}']`);
+                instance.connect({
+                    source: instance.getEndpoints(stateA)[0],
+                    target: stateB,
+                    paintStyle: { stroke: "#000",  strokeWidth: 2 },
+                    hoverPaintStyle: { stroke: "green", strokeWidth: 6 },
+                    connector: [ "StateMachine" ],
+                    overlays: [
+                        [ "Arrow", { location: 1, width: 20, length: 20 } ],
+                        [ "Label", { location: 0.5 } ]
+                    ]
+                }).setLabel(characters.join(","));
+            });
+            instance.bind("connection", onConnection);
+        });
+    }
+    input.click();
 });
 
 instance = jsPlumb.getInstance({});
@@ -247,7 +309,7 @@ instance.registerConnectionTypes({
     }
 });
 
-instance.bind("connection", function (info) {
+function onConnection (info) {
     let sourceName = info.source.innerText;
     let targetName = info.target.innerText;
     let connection = info.connection;
@@ -270,7 +332,8 @@ instance.bind("connection", function (info) {
         });
         connection.setLabel(transitionCharacters.join(","));
     }
-});
+}
+instance.bind("connection", onConnection);
 
 // Transition context menu handler
 instance.bind("contextmenu", function (component, event) {
