@@ -251,13 +251,16 @@ instance.bind("connection", function (info) {
     let sourceName = info.source.innerText;
     let targetName = info.target.innerText;
     let connection = info.connection;
-    let transitionCharacters = prompt("Enter the characters for this transition separated by commas.");
+    let transitionCharacters = prompt("Enter the characters for this transition separated by commas,"
+                                    +" using an underscore (_) to represent Epsilon (ε) transitions."
+                                    +"\nFor example a,_,b will create a transition for the characters a,ε,b.");
     // TODO: check that a transition does not already exist between these states
     if (transitionCharacters === null || transitionCharacters === "") {
         instance.deleteConnection(connection);
     } else {
         transitionCharacters = transitionCharacters
-                                .replace(/[^a-zA-Z0-9,]/g, "")
+                                .replace(/[^a-zA-Z0-9_,]/g, "")
+                                .replace("_", "ε")
                                 .toLowerCase()
                                 .split(",")
                                 .filter(char => char.length == 1);
