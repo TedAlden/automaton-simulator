@@ -245,6 +245,10 @@ $("#toolbox-wrapper").on("click", "#stop-simulation", function (event) {
     $("#step-simulation").prop("disabled", true);
     $("#instant-simulation").prop("disabled", false);
     $("#simulation-output").val("");
+    // Clear tape
+    $("#tape-wrapper #start").text("");
+    $("#tape-wrapper #middle").text("");
+    $("#tape-wrapper #end").text("");
 });
 
 // Toolbox -> Start simulation
@@ -259,6 +263,10 @@ $("#toolbox-wrapper").on("click", "#start-simulation", function (event) {
     $("#start-simulation").prop("disabled", true);
     $("#step-simulation").prop("disabled", false);
     $("#instant-simulation").prop("disabled", true);
+    // Initialize tape
+    $("#tape-wrapper #start").text(nfa.input.substring(0, nfa.index-1));
+    $("#tape-wrapper #middle").text(nfa.input.substring(nfa.index-1, nfa.index));
+    $("#tape-wrapper #end").text(nfa.input.substring(nfa.index, nfa.input.length));
 });
 
 // Toolbox -> Step simulation
@@ -287,8 +295,12 @@ $("#toolbox-wrapper").on("click", "#step-simulation", function (event) {
                     highlightedTransitions.push(connection);
                     connection.setPaintStyle({ stroke: "green", strokeWidth: 2 });
                 }
-            })
+            });
         });
+        // Update the tape
+        $("#tape-wrapper #start").text(nfa.input.substring(0, nfa.index-1));
+        $("#tape-wrapper #middle").text(nfa.input.substring(nfa.index-1, nfa.index));
+        $("#tape-wrapper #end").text(nfa.input.substring(nfa.index, nfa.input.length));
     }
     // Check for acceptance or rejection after the step completes
     else if (nfa.status !== "running") {
