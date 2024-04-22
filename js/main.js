@@ -146,7 +146,11 @@ $(".context-menu").on("click", ".edit-transition", function (event) {
     // Prompt the user for the characters to be in the updated transition
     let newTransition = prompt("Edit transitions.", oldCharacters.join(","))
     if (newTransition !== null && newTransition !== "") {
-        newCharacters = newTransition.split(",");
+        newCharacters = newTransition.replace(/[^a-zA-Z0-9_,]/g, "")
+                                        .replace("_", "ε")
+                                        .toLowerCase()
+                                        .split(",")
+                                        .filter(char => char.length == 1);
         // Add transition characters that are new (not in the old transition)
         newCharacters.forEach(newCharacter => {
             if (oldCharacters.indexOf(newCharacter) < 0) {
