@@ -26,7 +26,7 @@ class NFAModel {
 
     removeTransitions (state) {
         // Remove transitions coming from this state
-        delete this.transitions[state];
+        this.transitions[state] = {};
         // Remove transitions going into this state
         Object.keys(this.transitions).forEach(stateA => {
             Object.keys(this.transitions[stateA]).forEach(character => {
