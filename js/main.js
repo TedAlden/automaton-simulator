@@ -442,13 +442,3 @@ instance.bind("contextmenu", function (component, event) {
         bodyContextMenu.style.display = "none";
     }
 });
-
-instance.bind("ready", function () {
-    // Create an initial starting state
-    let stateName = "s" + numStates;
-    const state1 = createStateElement(uuidv4(), stateName);
-    addStateElementToDiagram(instance, state1, 100, 100);
-    state1.classList.add("starting")
-    nfa.model.setStartState(stateName);
-});
-
