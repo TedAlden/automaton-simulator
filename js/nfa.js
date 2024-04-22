@@ -16,7 +16,12 @@ class NFAModel {
     }
 
     removeTransition (stateA, character, stateB) {
-
+        if (this.transitions[stateA] && this.transitions[stateA][character]) {
+            let index = this.transitions[stateA][character].indexOf(stateB);
+            if (index > -1) {
+                this.transitions[stateA][character].splice(index, 1);
+            }
+        }
     }
 
     removeTransitions (state) {

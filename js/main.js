@@ -116,6 +116,19 @@ $(".context-menu").on("click", ".make-starting-state", function (event) {
 
 // Context menu -> Delete transition
 $(".context-menu").on("click", ".delete-transition", function (event) {
+    let sourceName = window.selectedConnection.source.dataset.stateName;
+    let targetName = window.selectedConnection.target.dataset.stateName;
+    let characters = window.selectedConnection.getLabel().split(",");
+    // Remove this transition within the NFA model
+    characters.forEach(character => {
+        nfa.model.removeTransition(sourceName, character, targetName);
+    });
+    // Remove transition from highlighted transitions list
+    let index = highlightedTransitions.indexOf(window.selectedConnection);
+    if (index > -1) {
+        highlightedTransitions.splice(index, 1);
+    }
+    // Delete the connection from JSPlumb
     instance.deleteConnection(window.selectedConnection);
 });
 
