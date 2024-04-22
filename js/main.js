@@ -79,6 +79,10 @@ $(document).bind("click", function (event) {
 
 // Context menu -> Delete state
 $(".context-menu").on("click", ".delete-state", function (event) {
+    let state = document.getElementById(window.selectedControl);
+    // Remove inbound/outbound transitions for this state
+    nfa.model.removeTransitions(state.dataset.stateName);
+    // Delete the control from JSPlumb
     instance.remove(window.selectedControl);
 });
 
