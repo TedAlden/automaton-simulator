@@ -307,7 +307,6 @@ $("#toolbox-wrapper").on("click", "#load-automata", function (event) {
                     stateATransitions[stateBName].push(character);
                 })
             });
-            console.log(stateAName, stateATransitions)
             instance.unbind("connection");
             Object.keys(stateATransitions).forEach(stateBName => {
                 let characters = stateATransitions[stateBName];
