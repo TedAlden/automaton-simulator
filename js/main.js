@@ -136,17 +136,32 @@ $(".context-menu").on("click", ".delete-transition", function (event) {
 $(".context-menu").on("click", ".edit-transition", function (event) {
     let sourceName = window.selectedConnection.source.dataset.stateName;
     let targetName = window.selectedConnection.target.dataset.stateName;
-    let characters = [];
-    for (character in nfa.transitions[sourceName]) {
-        if (nfa.transitions[sourceName][character].includes(targetName)) {
-            characters.push(character);
+    // Create a list of the characters that exist in the transition before editing
+    let oldCharacters = [];
+    Object.keys(nfa.model.transitions[sourceName]).forEach(character => {
+        if (nfa.model.transitions[sourceName][character].indexOf(targetName) > -1) {
+            oldCharacters.push(character);
         }
+    });
+    // Prompt the user for the characters to be in the updated transition
+    let newTransition = prompt("Edit transitions.", oldCharacters.join(","))
+    if (newTransition !== null && newTransition !== "") {
+        newCharacters = newTransition.split(",");
+        // Add transition characters that are new (not in the old transition)
+        newCharacters.forEach(newCharacter => {
+            if (oldCharacters.indexOf(newCharacter) < 0) {
+                nfa.model.addTransition(sourceName, newCharacter, targetName);
+            }
+        });
+        // Remove transition characters that are not in the new transition
+        oldCharacters.forEach(oldCharacter => {
+            if (newCharacters.indexOf(oldCharacter) < 0) {
+                nfa.model.removeTransition(sourceName, oldCharacter, targetName);
+            }
+        })
     }
-    prompt("Edit transitions.", characters.join(","));
-    // TODO: Update the transitions in the model
-    // ...
-    // TODO: Update the connection label
-    // ...
+    // Update the transition label in JSPlumb
+    window.selectedConnection.setLabel(newCharacters.join(","));
 });
 
 // Context menu -> Create state
