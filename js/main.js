@@ -88,7 +88,55 @@ $(".context-menu").on("click", ".delete-state", function (event) {
 
 // Context menu -> Rename state
 $(".context-menu").on("click", ".rename-state", function (event) {
-    prompt("Rename state");
+    let state = document.getElementById(window.selectedControl);
+    let oldName = state.dataset.stateName;
+    let newName = prompt("Rename state", oldName);
+    // Check this state name is not already in use
+    let nameAlreadyUsed = false;
+    Object.keys(nfa.model.transitions).forEach(stateA => {
+        Object.keys(nfa.model.transitions[stateA]).forEach(character => {
+            nfa.model.transitions[stateA][character].forEach(stateB => {
+                if (stateA === newName || stateB === newName) {
+                    nameAlreadyUsed = true;
+                }
+            });
+        });
+    });
+    if (nameAlreadyUsed) {
+        alert("State name already in use. Please pick a unique state name.");
+    }
+    else if (newName !== null && newName !== "") {
+        // Update transitions where this state is the target
+        Object.keys(nfa.model.transitions).forEach(stateA => {
+            Object.keys(nfa.model.transitions[stateA]).forEach(character => {
+                nfa.model.transitions[stateA][character].forEach((stateB, index) => {
+                    if (stateB === oldName) {
+                        nfa.model.transitions[stateA][character][index] = newName;
+                    }
+                });
+            });
+        });
+        // Update transitions where this state is the source
+        Object.keys(nfa.model.transitions).forEach(stateA => {
+            if (stateA === oldName) {
+                nfa.model.transitions[newName] = nfa.model.transitions[oldName];
+                nfa.model.transitions[oldName] = {};
+            }
+        });
+        // Update names of starting state if necessary
+        if (nfa.model.startState === oldName) {
+            nfa.model.startState = newName;
+        }
+        // Update names of accepting states if necessary
+        nfa.model.acceptStates.forEach((acceptState, index) => {
+            if (acceptState === oldName) {
+                nfa.model.acceptStates[index] = newName;
+            }
+        });
+        // Update DOM element
+        state.dataset.stateName = newName;
+        state.innerHTML = newName;
+    }
 });
 
 // Context menu -> Toggle accepting state
