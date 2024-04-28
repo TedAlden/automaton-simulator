@@ -16,9 +16,11 @@
       <div id="toolbox-wrapper">
         <!-- Enter input string for automaton -->
         <label for="enter-string">Enter string</label>
+        <a class="custom-tool-tip" href="#" data-bs-toggle="tooltip" data-bs-title="Enter a string to simulate the automaton.">(?)</a>
         <input class="w-100" id="enter-string" type="text">
         <!-- Simulation controls (stop simulation, and next step) -->
         <label for="simulator">Simulation controls</label>
+        <a class="custom-tool-tip" href="#" data-bs-toggle="tooltip" data-bs-title="Stop will cancel the simulation and reset. Start will initialise the simulation with the string entered above. Next will read a character from the input and transition to the next states if possible.">(?)</a>
         <div class="btn-group w-100" role="group" aria-label="simulator">
           <button class="btn btn-outline-primary btn-sm" id="stop-simulation" disabled>Stop</button>
           <button class="btn btn-outline-primary btn-sm" id="start-simulation">Start</button>
@@ -27,10 +29,12 @@
         <input class="w-100" id="simulation-output" type="text" value="" disabled>
         <!-- Test string instantaneously -->
         <label for="instant-simulation">Test string</label>
+        <a class="custom-tool-tip" href="#" data-bs-toggle="tooltip" data-bs-title="Test a string instanteously. This is separate to the visualation/simulation - a result will be output immediately.">(?)</a>
         <button class="btn btn-outline-primary btn-sm w-100" id="instant-simulation">Test</button>
         <input class="w-100" id="instant-simulation-output" type="text" value="" disabled>
         <!-- Save and load automata to/from JSON files -->
         <label for="save-load-automata">Save/load automata</label>
+        <a class="custom-tool-tip" href="#" data-bs-toggle="tooltip" data-bs-title="Save or load an automaton diagram to/from a JSON file.">(?)</a>
         <div class="btn-group-vertical w-100" role="group" aria-label="save-load">
           <button class="btn btn-outline-primary btn-sm w-100" id="save-automata">Save to JSON</button>
           <button class="btn btn-outline-primary btn-sm w-100" id="load-automata">Load from JSON</button>
@@ -78,6 +82,11 @@
 
     <!-- Script imports -->
     <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script>
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    </script>
     <script src="js/jsplumb.min.js"></script>
     <script src="js/nfa.js"></script>
     <script src="js/nfa.test.js"></script>

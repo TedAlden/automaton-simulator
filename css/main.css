@@ -151,3 +151,9 @@ body {
 .btn {
   transition-duration: 0s;
 }
+
+/* Tooltips */
+
+.custom-tool-tip {
+  font-size: 13px;
+}
