@@ -20,24 +20,46 @@
         <input class="w-100" id="enter-string" type="text">
         <!-- Simulation controls (stop simulation, and next step) -->
         <label for="simulator">Simulation controls</label>
-        <a class="custom-tool-tip" href="#" data-bs-toggle="tooltip" data-bs-title="Stop will cancel the simulation and reset. Start will initialise the simulation with the string entered above. Next will read a character from the input and transition to the next states if possible.">(?)</a>
+        <a class="custom-tool-tip" href="#" data-bs-toggle="tooltip" data-bs-title="Stop will cancel the simulation and reset. Start will initialise the simulation with the string entered above. Skip-next will read a character from the input and transition to the next states if possible.">(?)</a>
         <div class="btn-group w-100" role="group" aria-label="simulator">
-          <button class="btn btn-outline-primary btn-sm" id="stop-simulation" disabled>Stop</button>
-          <button class="btn btn-outline-primary btn-sm" id="start-simulation">Start</button>
-          <button class="btn btn-outline-primary btn-sm" id="step-simulation" disabled>Next</button>
+          <button class="btn btn-outline-primary btn-sm" id="stop-simulation" disabled>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-stop-fill" viewBox="0 0 16 16">
+              <path d="M5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5A1.5 1.5 0 0 1 5 3.5"/>
+            </svg>
+          </button>
+          <button class="btn btn-outline-primary btn-sm" id="start-simulation">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+              <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
+            </svg>
+          </button>
+          <button class="btn btn-outline-primary btn-sm" id="step-simulation" disabled>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-skip-forward-fill" viewBox="0 0 16 16">
+              <path d="M15.5 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V8.753l-6.267 3.636c-.54.313-1.233-.066-1.233-.697v-2.94l-6.267 3.636C.693 12.703 0 12.324 0 11.693V4.308c0-.63.693-1.01 1.233-.696L7.5 7.248v-2.94c0-.63.693-1.01 1.233-.696L15 7.248V4a.5.5 0 0 1 .5-.5"/>
+            </svg>
+          </button>
         </div>
         <input class="w-100" id="simulation-output" type="text" value="" disabled>
         <!-- Test string instantaneously -->
         <label for="instant-simulation">Test string</label>
-        <a class="custom-tool-tip" href="#" data-bs-toggle="tooltip" data-bs-title="Test a string instanteously. This is separate to the visualation/simulation - a result will be output immediately.">(?)</a>
+        <a class="custom-tool-tip" href="#" data-bs-toggle="tooltip" data-bs-title="Test a string instanteously. This is separate to the simulation - a result will be output immediately.">(?)</a>
         <button class="btn btn-outline-primary btn-sm w-100" id="instant-simulation">Test</button>
         <input class="w-100" id="instant-simulation-output" type="text" value="" disabled>
         <!-- Save and load automata to/from JSON files -->
-        <label for="save-load-automata">Save/load automata</label>
-        <a class="custom-tool-tip" href="#" data-bs-toggle="tooltip" data-bs-title="Save or load an automaton diagram to/from a JSON file.">(?)</a>
-        <div class="btn-group-vertical w-100" role="group" aria-label="save-load">
-          <button class="btn btn-outline-primary btn-sm w-100" id="save-automata">Save to JSON</button>
-          <button class="btn btn-outline-primary btn-sm w-100" id="load-automata">Load from JSON</button>
+        <label for="save-load-automata">Save/load automaton</label>
+        <a class="custom-tool-tip" href="#" data-bs-toggle="tooltip" data-bs-title="Save or load an automaton model to/from a JSON file.">(?)</a>
+        <div class="btn-group w-100" role="group" aria-label="save-load">
+          <button class="btn btn-outline-primary btn-sm w-100" id="save-automata">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+              <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
+              <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
+            </svg>
+          </button>
+          <button class="btn btn-outline-primary btn-sm w-100" id="load-automata">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-upload" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.569 14.502 11 12.687 11H10a.5.5 0 0 1 0-1h2.688C13.979 10 15 8.988 15 7.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 2.825 10.328 1 8 1a4.53 4.53 0 0 0-2.941 1.1c-.757.652-1.153 1.438-1.153 2.055v.448l-.445.049C2.064 4.805 1 5.952 1 7.318 1 8.785 2.23 10 3.781 10H6a.5.5 0 0 1 0 1H3.781C1.708 11 0 9.366 0 7.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383"/>
+              <path fill-rule="evenodd" d="M7.646 4.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V14.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708z"/>
+            </svg>
+          </button>
         </div>
       </div>
       <!-- Diagram/canvas for the visualisation of the automaton -->
