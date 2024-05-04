@@ -1,10 +1,30 @@
+/**
+ * Automaton JSON data structure.
+ * @typedef {Object} Automaton
+ * @property {Object} transitions - The transition table.
+ * @property {?String} startState - The starting state.
+ * @property {Array} acceptStates - A list of accepting states.
+ */
+
+/**
+ * Class representing an NFA.
+ */
 class NFAModel {
+    /**
+     * Create an NFA data model.
+     */
     constructor() {
         this.transitions = {};
         this.startState = null;
         this.acceptStates = [];
     }
 
+    /**
+     * Create a transition between two states, reading one character.
+     * @param {String} stateA - The name of the source state.
+     * @param {String} character - The character read in the transition.
+     * @param {String} stateB - The name of the target state.
+     */
     addTransition (stateA, character, stateB) {
         if (!this.transitions[stateA]) {
             this.transitions[stateA] = {};
@@ -15,6 +35,12 @@ class NFAModel {
         this.transitions[stateA][character].push(stateB);
     }
 
+    /**
+     * Remove a single character transition between two states.
+     * @param {String} stateA - The name of the source state.
+     * @param {String} character - The character read in the transition.
+     * @param {String} stateB - The name of the target state.
+     */
     removeTransition (stateA, character, stateB) {
         if (this.transitions[stateA] && this.transitions[stateA][character]) {
             let index = this.transitions[stateA][character].indexOf(stateB);
@@ -24,6 +50,10 @@ class NFAModel {
         }
     }
 
+    /**
+     * Remove all of the transitions in and out of a state.
+     * @param {String} state - The name of the source state.
+     */
     removeTransitions (state) {
         // Remove transitions coming from this state
         this.transitions[state] = {};
@@ -37,6 +67,12 @@ class NFAModel {
         });
     }
 
+    /**
+     * Check if a transition exists between a source and target state.
+     * @param {String} stateA - The name of the source state.
+     * @param {String} stateB - The name of the target state.
+     * @returns {Boolean} State was found.
+     */
     hasTransition (stateA, stateB) {
         let found = false;
         if (this.transitions[stateA] !== null) {
@@ -49,6 +85,13 @@ class NFAModel {
         return found;   
     }
 
+    /**
+     * Perform a transition from a source state, reading a character,
+     * and return a list of the target state(s).
+     * @param {String} stateA - The name of the source state.
+     * @param {String} character - The character read in the transition.
+     * @returns {?Array} List of target state(s).
+     */
     doTransition (stateA, character) {
         if (this.transitions[stateA]) {
             return this.transitions[stateA][character];
@@ -57,12 +100,20 @@ class NFAModel {
         }
     }
 
+    /**
+     * Mark a state as an accepting state.
+     * @param {String} state - The name of the state.
+     */
     addAcceptState (state) {
         if (!this.acceptStates.includes(state)) {
             this.acceptStates.push(state);
         }
     }
 
+    /**
+     * Mark a state as a non-accepting state.
+     * @param {String} state - The name of the state.
+     */
     removeAcceptState (state) {
         if (this.acceptStates.includes(state)) {
             let index = this.acceptStates.indexOf(state);
@@ -70,14 +121,27 @@ class NFAModel {
         }
     }
 
+    /**
+     * Check if a state is an accepting state.
+     * @param {String} state - The name of the state.
+     * @returns {Boolean} State is accepting.
+     */
     isAcceptState (state) {
         return this.acceptStates.indexOf(state) > -1;
     }
 
+    /**
+     * Set the automatons start state to a given state.
+     * @param {String} state - The name of the state.
+     */
     setStartState (state) {
         this.startState = state;
     }
 
+    /**
+     * Serialise the model into a JSON format.
+     * @returns {Automaton} JSON object.
+     */
     serialize () {
         return {
             transitions: this.transitions,
@@ -86,6 +150,11 @@ class NFAModel {
         };
     }
 
+    /**
+     * Deserialise the model from a JSON format and load it's attributes
+     * into the current instance.
+     * @param {Automaton} json - The JSON object to load.
+     */
     deserialize (json) {
         this.transitions = json.transitions;
         this.acceptStates = json.acceptStates;
@@ -93,7 +162,14 @@ class NFAModel {
     }
 }
 
+/**
+ * Class containing the code for simulating an NFA.
+ */
 class NFASimulator {
+    /**
+     * 
+     * @param {NFAModel} model 
+     */
     constructor(model) {
         this.model = model;
         this.status = null;
@@ -103,6 +179,11 @@ class NFASimulator {
         this.states = [];
     }
 
+    /**
+     * Check if a string is accepted by the NFA.
+     * @param {String} input - The input string to test for acceptance.
+     * @returns {Boolean} Input string was accepted.
+     */
     accepts (input) {
         this.initialize(input);
         while (this.status === "running") {
@@ -111,6 +192,10 @@ class NFASimulator {
         return this.status === "accept";
     }
 
+    /**
+     * Initialise the simulator with an input.
+     * @param {String} input - The input string to simulate.
+     */
     initialize (input) {
         this.status = "running";
         this.nextStep = "epsilons";
@@ -119,6 +204,10 @@ class NFASimulator {
         this.states = [this.model.startState];
     }
 
+    /**
+     * Perform one step, either following an epsilon or a symbol
+     * transitions, after reading an input symbol. 
+     */
     step () {
         if (this.nextStep == "epsilons") {
             let changed = true;
