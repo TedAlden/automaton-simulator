@@ -1,11 +1,12 @@
-var stateContextMenu = document.getElementById('state-context-menu');
-var transitionContextMenu = document.getElementById('transition-context-menu');
-var bodyContextMenu = document.getElementById('body-context-menu');
-var numStates = 0;
+
+// NFA Model and Simulator
 var model = new NFAModel();
 var nfa = new NFASimulator(model);
+// Keep track of highlighted (active) components
 var highlightedStates = [];
 var highlightedTransitions = [];
+// Number of states, used for naming states s0, s1, s2, etc...
+var numStates = 0;
 
 // https://stackoverflow.com/a/2117523
 function uuidv4() {
@@ -26,8 +27,7 @@ function createStateElement (id, name) {
 }
 
 function addStateElementToDiagram (instance, state, x, y) {
-    state.style.left = `${x}px`;
-    state.style.top = `${y}px`;
+    $(state).css({top: y, left: x});
     instance.getContainer().appendChild(state);
     instance.draggable(state.id, { "containment": true });
     instance.addEndpoint(state.id, {
@@ -51,37 +51,33 @@ function addStateElementToDiagram (instance, state, x, y) {
 $("#diagram").on("contextmenu", ".control", function (event) {
     event.preventDefault();
     window.selectedControl = $(this).attr("id");
-    stateContextMenu.style.left = event.pageX + 'px'
-    stateContextMenu.style.top = event.pageY + 'px'
-    stateContextMenu.style.display = 'block'
-    transitionContextMenu.style.display = "none";
-    bodyContextMenu.style.display = "none";
+    $("#state-context-menu").css({display: "block", top: event.pageY, left: event.pageX});
+    $("#transition-context-menu").css({display: "none"});
+    $("#body-context-menu").css({display: "none"});
 });
 
 // Background context menu handler
 $("#diagram").on("contextmenu", function (event) {
     if (event.target.id == "diagram") {
         event.preventDefault();
-        bodyContextMenu.style.left = event.pageX + 'px'
-        bodyContextMenu.style.top = event.pageY + 'px'
-        bodyContextMenu.style.display = 'block'
-        transitionContextMenu.style.display = "none";
-        stateContextMenu.style.display = "none";
+        $("#state-context-menu").css({display: "none"});
+        $("#transition-context-menu").css({display: "none"});
+        $("#body-context-menu").css({display: "block", top: event.pageY, left: event.pageX});
     }
 });
 
 // Hide context menus when anywhere is left clicked
 $(document).bind("click", function (event) {
-    stateContextMenu.style.display = 'none'
-    transitionContextMenu.style.display = "none";
-    bodyContextMenu.style.display = "none";
+    $("#state-context-menu").css({display: "none"});
+    $("#transition-context-menu").css({display: "none"});
+    $("#body-context-menu").css({display: "none"});
 });
 
 // Context menu -> Delete state
 $(".context-menu").on("click", ".delete-state", function (event) {
-    let state = document.getElementById(window.selectedControl);
+    let stateName = $(window.selectedControl).attr("state-name");
     // Remove inbound/outbound transitions for this state
-    nfa.model.removeTransitions(state.dataset.stateName);
+    nfa.model.removeTransitions(stateName);
     // Delete the control from JSPlumb
     instance.remove(window.selectedControl);
 });
@@ -435,10 +431,8 @@ instance.bind("contextmenu", function (component, event) {
     if (component.hasClass("jtk-connector")) {
         event.preventDefault();
         window.selectedConnection = component;
-        transitionContextMenu.style.left = event.pageX + 'px'
-        transitionContextMenu.style.top = event.pageY + 'px'
-        transitionContextMenu.style.display = 'block'
-        stateContextMenu.style.display = "none";
-        bodyContextMenu.style.display = "none";
+        $("#state-context-menu").css({display: "none"});
+        $("#transition-context-menu").css({display: "block", top: event.pageY, left: event.pageX});
+        $("#body-context-menu").css({display: "none"});
     }
 });
