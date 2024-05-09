@@ -1,4 +1,3 @@
-
 // NFA Model and Simulator
 var model = new NFAModel();
 var nfa = new NFASimulator(model);
@@ -17,20 +16,20 @@ function uuidv4() {
 }
 
 function createStateElement (id, name) {
-    const state = document.createElement('div');
-    state.dataset.stateName = name;
-    state.innerText = name;
-    state.id = id;
-    state.className += "control";
-    state.style.position = 'absolute';
+    var state = $('<div></div>')
+        .attr('data-state-name', name)
+        .text(name)
+        .attr('id', id)
+        .addClass('control')
+        .css('position', 'absolute');
     return state;
 }
 
 function addStateElementToDiagram (instance, state, x, y) {
     $(state).css({top: y, left: x});
-    instance.getContainer().appendChild(state);
-    instance.draggable(state.id, { "containment": true });
-    instance.addEndpoint(state.id, {
+    $(instance.getContainer()).append(state);
+    instance.draggable(state.attr("id"), { "containment": true });
+    instance.addEndpoint(state.attr("id"), {
         endpoint: [ "Dot", { radius: 6 } ],
         anchor: [ "Perimeter", { shape: "Circle"} ],
         isSource: true,
@@ -50,7 +49,7 @@ function addStateElementToDiagram (instance, state, x, y) {
 // State context menu handler
 $("#diagram").on("contextmenu", ".control", function (event) {
     event.preventDefault();
-    window.selectedControl = $(this).attr("id");
+    window.selectedControl = $(this);
     $("#state-context-menu").css({display: "block", top: event.pageY, left: event.pageX});
     $("#transition-context-menu").css({display: "none"});
     $("#body-context-menu").css({display: "none"});
@@ -75,17 +74,25 @@ $(document).bind("click", function (event) {
 
 // Context menu -> Delete state
 $(".context-menu").on("click", ".delete-state", function (event) {
-    let stateName = $(window.selectedControl).attr("state-name");
+    let stateName = window.selectedControl.attr("data-state-name");
     // Remove inbound/outbound transitions for this state
     nfa.model.removeTransitions(stateName);
+    // Null out start state if it is deleted
+    if (nfa.model.startState === stateName) {
+        nfa.model.startState = null;
+    }
+    // Remove accept state if deleted
+    if (nfa.model.acceptStates.includes(stateName)) {
+        nfa.model.acceptStates.splice(nfa.model.acceptStates.indexOf(stateName));
+    }
     // Delete the control from JSPlumb
     instance.remove(window.selectedControl);
 });
 
 // Context menu -> Rename state
 $(".context-menu").on("click", ".rename-state", function (event) {
-    let state = document.getElementById(window.selectedControl);
-    let oldName = state.dataset.stateName;
+    let state = window.selectedControl;
+    let oldName = state.attr("data-state-name");
     let newName = prompt("Rename state", oldName);
     // Check this state name is not already in use
     let nameAlreadyUsed = false;
@@ -130,34 +137,35 @@ $(".context-menu").on("click", ".rename-state", function (event) {
             }
         });
         // Update DOM element
-        state.dataset.stateName = newName;
-        state.innerHTML = newName;
+        state.attr("data-state-name", newName);
+        state.text(newName);
     }
 });
 
 // Context menu -> Toggle accepting state
 $(".context-menu").on("click", ".toggle-accepting-state", function (event) {
-    let state = document.getElementById(window.selectedControl);
-    let stateName = state.innerHTML;
+    let state = window.selectedControl;
+    let stateName = state.attr("data-state-name");
     if (nfa.model.acceptStates.includes(stateName)) {
-        state.classList.remove("accepting");
+        state.removeClass("accepting");
         nfa.model.acceptStates.splice(nfa.model.acceptStates.indexOf(stateName));
     } else {
-        state.classList.add("accepting");
+        state.addClass("accepting");
         nfa.model.acceptStates.push(stateName);
     }
 });
 
 // Context menu -> Make starting state
 $(".context-menu").on("click", ".make-starting-state", function (event) {
-    let oldStart = document.querySelector(`[data-state-name='${nfa.model.startState}']`);
-    let state = document.getElementById(window.selectedControl);
-    let stateName = state.innerHTML;
-    if (!state.classList.contains("starting")) {
-        state.classList.add("starting");
-        nfa.model.setStartState(stateName);
-        if (oldStart !== null) {
-            oldStart.classList.remove("starting");
+    let oldStart = $("#diagram").find(`[data-state-name='${nfa.model.startState}']`);
+    console.log(nfa.model.startState, oldStart)
+    let state = window.selectedControl;
+    let stateName = state.attr("data-state-name");
+    if (!state.hasClass("starting")) {
+        state.addClass("starting");
+        nfa.model.startState = stateName;
+        if (oldStart !== null && oldStart !== undefined) {
+            oldStart.removeClass("starting");
         }
     }
 });
@@ -252,9 +260,9 @@ $("#toolbox-wrapper").on("click", "#start-simulation", function (event) {
     nfa.initialize($('#enter-string').val());
     nfa.step();
     // Highlight the active state
-    let highlightedState = $("#diagram").find(`[data-state-name='${nfa.model.startState}']`);
-    $(highlightedState).addClass("highlighted");
-    highlightedStates.push(highlightedState);
+    let startState = $("#diagram").find(`[data-state-name='${nfa.model.startState}']`);
+    startState.addClass("highlighted");
+    highlightedStates.push(startState);
     $("#stop-simulation").prop("disabled", false);
     $("#start-simulation").prop("disabled", true);
     $("#step-simulation").prop("disabled", false);
@@ -311,7 +319,7 @@ $("#toolbox-wrapper").on("click", "#step-simulation", function (event) {
 $("#toolbox-wrapper").on("click", "#save-automata", function (event) {
     let json = nfa.model.serialize();
     json.states = {};
-    $("#diagram").find('div.control').each(function() {
+    $("#diagram").find('div.control').each(() => {
         json.states[this.dataset.stateName] = $(this).position();
     });
 
@@ -345,11 +353,11 @@ $("#toolbox-wrapper").on("click", "#load-automata", function (event) {
             addStateElementToDiagram(instance, stateElement, x, y);
             // Starting state
             if (stateName === json.startState) {
-                stateElement.classList.add("starting");
+                stateElement.addClass("starting");
             }
             // Accepting states
             if (json.acceptStates.indexOf(stateName) > -1) {
-                stateElement.classList.add("accepting");
+                stateElement.addClass("accepting");
             }
         });
         // Make transitions
